@@ -32,6 +32,8 @@ Then open:
 
 `http://127.0.0.1:8181`
 
+![Website]()
+
 ## Notes
 
 - This app uses realistic Indian market terminology and exchange-style margin
