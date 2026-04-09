@@ -1,0 +1,53 @@
+{
+  "positions": [
+    {
+      "contractId": "nse-nifty-fut",
+      "productType": "NRML",
+      "side": "BUY",
+      "quantity": 1,
+      "price": 22510.0
+    },
+    {
+      "contractId": "nse-nifty-next-fut",
+      "productType": "NRML",
+      "side": "SELL",
+      "quantity": 1,
+      "price": 22596.0
+    },
+    {
+      "contractId": "nse-banknifty-call",
+      "productType": "NRML",
+      "side": "SELL",
+      "quantity": 1,
+      "price": 522.0
+    },
+    {
+      "contractId": "nse-reliance-cash",
+      "productType": "CNC",
+      "side": "BUY",
+      "quantity": 140,
+      "price": 2934.0
+    },
+    {
+      "contractId": "bse-sensex-fut",
+      "productType": "MIS",
+      "side": "SELL",
+      "quantity": 2,
+      "price": 74480.0
+    },
+    {
+      "contractId": "mcx-crudeoil-fut",
+      "productType": "NRML",
+      "side": "BUY",
+      "quantity": 3,
+      "price": 6725.0
+    },
+    {
+      "contractId": "ncdex-soybean-fut",
+      "productType": "NRML",
+      "side": "SELL",
+      "quantity": 2,
+      "price": 4850.0
+    }
+  ]
+}

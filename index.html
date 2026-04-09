@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NCCL CAL | Indian Broker Margin Studio</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <p class="eyebrow">INR Margin Intelligence</p>
+          <h1>NCCL CAL</h1>
+          <p class="subhead">
+            Indian broker-style margin calculator for NSE, BSE, MCX, and NCDEX.
+            Select positions on the left and get combined margin output instantly
+            on the right.
+          </p>
+        </div>
+        <div class="topbar-actions">
+          <button id="sample-diversified" class="ghost-button">Diversified sample</button>
+          <button id="sample-commodity" class="ghost-button">Commodity sample</button>
+          <button id="sample-validation" class="ghost-button">Zerodha validation</button>
+          <button id="add-position" class="primary-button">Add position</button>
+          <button id="export-json" class="ghost-button">Export JSON</button>
+          <label class="ghost-button file-button">
+            Import JSON
+            <input id="import-json" type="file" accept="application/json" />
+          </label>
+        </div>
+      </header>
+
+      <section class="exchange-strip" id="exchange-grid"></section>
+
+      <main class="workspace">
+        <section class="panel builder-panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Quick Calculator</p>
+              <h2>Select inputs and get margin instantly</h2>
+            </div>
+            <p class="tiny-note">
+              Designed to feel closer to a broker margin form than a dashboard.
+            </p>
+          </div>
+
+          <div id="error-banner" class="error-banner hidden"></div>
+
+          <div class="quick-grid">
+            <label>
+              <span class="field-label">Exchange</span>
+              <select id="quick-exchange"></select>
+            </label>
+            <label>
+              <span class="field-label">Product</span>
+              <select id="quick-product"></select>
+            </label>
+            <label class="quick-symbol">
+              <span class="field-label">Symbol</span>
+              <select id="quick-symbol"></select>
+            </label>
+            <label>
+              <span class="field-label">Net quantity</span>
+              <input id="quick-quantity" type="number" min="0.01" step="0.01" />
+            </label>
+            <label>
+              <span class="field-label">Price</span>
+              <input id="quick-price" type="number" min="0.01" step="0.01" />
+            </label>
+            <label>
+              <span class="field-label">Broker product</span>
+              <select id="quick-product-type"></select>
+            </label>
+          </div>
+
+          <div class="quick-meta-row">
+            <div class="lot-note" id="quick-lot-note"></div>
+            <div class="side-toggle" id="quick-side-toggle">
+              <label><input type="radio" name="quick-side" value="BUY" checked /> Buy</label>
+              <label><input type="radio" name="quick-side" value="SELL" /> Sell</label>
+            </div>
+            <div class="quick-actions">
+              <button id="quick-add" class="primary-button">Add</button>
+              <button id="quick-reset" class="ghost-button">Reset</button>
+            </div>
+          </div>
+
+          <div class="table-scroll ledger-wrap">
+            <table class="detail-table">
+              <thead>
+                <tr>
+                  <th>Exchange</th>
+                  <th>Contract</th>
+                  <th>Product</th>
+                  <th>Strike</th>
+                  <th>Qty</th>
+                  <th>Initial margin</th>
+                  <th>Exposure</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="positions-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="panel output-panel">
+          <div class="panel-head output-head">
+            <div>
+              <p class="section-kicker">Combined Margin Requirements</p>
+              <h2>Live output</h2>
+            </div>
+            <p class="tiny-note">Values refresh automatically as inputs change.</p>
+          </div>
+
+          <div class="summary-cluster" id="summary-grid"></div>
+
+          <div class="sub-summary" id="sub-summary"></div>
+
+          <div class="mini-table-wrap">
+            <table class="mini-table">
+              <thead>
+              <tr>
+                <th>Exchange</th>
+                <th>Contract</th>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Initial margin</th>
+                <th>Exposure margin</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+              <tbody id="output-rows"></tbody>
+            </table>
+          </div>
+        </aside>
+      </main>
+
+      <section class="panel workbook-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Workbook</p>
+            <h2>Methodology and working</h2>
+          </div>
+          <p class="tiny-note">
+            This section explains how every output is derived and how to read it.
+          </p>
+        </div>
+        <div class="workbook-grid" id="workbook-grid"></div>
+      </section>
+
+      <section class="dual-panel-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Derivative Groups</p>
+              <h2>Spread and hedge breakdown</h2>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="detail-table">
+              <thead>
+                <tr>
+                  <th>Group</th>
+                  <th>Contracts</th>
+                  <th>Gross span</th>
+                  <th>Net span</th>
+                  <th>Charges</th>
+                  <th>Short floor</th>
+                  <th>Requirement</th>
+                </tr>
+              </thead>
+              <tbody id="derivative-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="section-kicker">Cash Equity</p>
+              <h2>VaR and ELM breakdown</h2>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="detail-table">
+              <thead>
+                <tr>
+                  <th>Instrument</th>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th>Var</th>
+                  <th>ELM</th>
+                  <th>Ad hoc</th>
+                  <th>Requirement</th>
+                </tr>
+              </thead>
+              <tbody id="cash-body"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Scenario Matrix</p>
+            <h2>16-scenario grouped P/L</h2>
+          </div>
+          <p class="tiny-note">Useful for seeing where scan loss and spread benefit come from.</p>
+        </div>
+        <div class="table-scroll">
+          <table class="detail-table scenario-table">
+            <thead>
+              <tr id="scenario-head">
+                <th>Group</th>
+              </tr>
+            </thead>
+            <tbody id="scenario-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel references-panel">
+        <div class="panel-head">
+          <div>
+            <p class="section-kicker">Reference Surfaces</p>
+            <h2>Official exchange and clearing links</h2>
+          </div>
+        </div>
+        <div class="references-list" id="references-list"></div>
+      </section>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

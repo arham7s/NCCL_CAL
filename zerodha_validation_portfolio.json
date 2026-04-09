@@ -1,0 +1,18 @@
+{
+  "positions": [
+    {
+      "contractId": "nse-nifty-fut",
+      "productType": "NRML",
+      "side": "BUY",
+      "quantity": 1,
+      "price": 23151.1
+    },
+    {
+      "contractId": "nse-reliance-fut",
+      "productType": "NRML",
+      "side": "BUY",
+      "quantity": 1,
+      "price": 1308.9
+    }
+  ]
+}
